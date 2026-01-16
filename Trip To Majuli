@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Majuli Ticket</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;padding:20px;background:#f0fdf4;font-family:Arial}
+.box{max-width:380px;margin:auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.1)}
+h2{text-align:center;color:#166534}
+input,button{width:100%;padding:12px;margin-top:12px;font-size:16px;border-radius:10px}
+input{border:1px solid #86efac}
+button{border:2px solid #22c55e;background:#fff;color:#166534}
+button:active{transform:scale(.95)}
+canvas{display:none}
+</style>
+</head>
+
+<body>
+<div class="box">
+<h2>Majuli Trip Ticket</h2>
+<input id="name" placeholder="Customer Name">
+<input id="adv" type="number" placeholder="Advance Amount ₹">
+<button onclick="sendTicket()">Send Ticket on WhatsApp</button>
+</div>
+
+<canvas id="c" width="900" height="500"></canvas>
+
+<script>
+function sendTicket(){
+ let n=name.value,a=adv.value;
+ if(!n||!a){alert("Fill all details");return;}
+ let ctx=c.getContext("2d");
+ ctx.fillStyle="#22c55e";ctx.fillRect(0,0,900,500);
+ ctx.fillStyle="#fff";ctx.font="bold 40px Arial";ctx.textAlign="center";
+ ctx.fillText("SEAT BOOKING TICKET",450,70);
+ ctx.font="26px Arial";ctx.textAlign="left";
+ ctx.fillText("Destination: Majuli",80,160);
+ ctx.fillText("Date: 22 January 2024",80,210);
+ ctx.fillText("Name: "+n,80,260);
+ ctx.fillText("Advance: ₹"+a,80,310);
+ ctx.font="22px Arial";ctx.textAlign="center";
+ ctx.fillText("Seat confirmed after advance payment",450,390);
+
+ c.toBlob(async b=>{
+   let f=new File([b],"Majuli_Ticket.png",{type:"image/png"});
+   if(navigator.canShare&&navigator.canShare({files:[f]})){
+     navigator.share({files:[f],title:"Majuli Ticket"});
+   }else{
+     let x=document.createElement("a");
+     x.href=URL.createObjectURL(b);
+     x.download="Majuli_Ticket.png";
+     x.click();
+   }
+ });
+}
+</script>
+</body>
+</html>
